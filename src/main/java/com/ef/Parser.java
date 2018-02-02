@@ -21,6 +21,7 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.validation.MapBindingResult;
 import org.springframework.validation.ObjectError;
 
+import com.ef.utils.ArgumentsParams;
 import com.ef.validators.ParamsFilterValidator;
 
 @Configuration
@@ -68,10 +69,10 @@ public class Parser {
 			if(err.hasErrors()) {
 				List<ObjectError> list = err.getAllErrors();
 				for(ObjectError objErr : list){
-					log.error(objErr.getDefaultMessage());
+					log.error("Error on start the application: " + objErr.getDefaultMessage());
 				}
 				
-				log.info("The application will be stoped");
+				log.error("The application will be stoped");
 				//stop the app
 				System.exit(0);
 			}
@@ -82,9 +83,17 @@ public class Parser {
 			//load parser in file parser-job
 			Job job = (Job) context.getBean("loadParseJob");
 			
+			//Process all arguments sent by line command
+			Map<String, String> values = ArgumentsParams.getParams(args);
 			
+			//Available all parameter to reader, processor and writer.
+			JobParametersBuilder params = new JobParametersBuilder();
+			for (String key : values.keySet()) {
+				params.addString(key, values.get(key));
+			}
+
 			//run job 
-			JobExecution exec = launcher.run(job, new JobParameters());
+			JobExecution exec = launcher.run(job, params.toJobParameters());
 			
 			//get status execution
 			log.info("The application finished with successful, status code [" + exec.getStatus() + "]");
