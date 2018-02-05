@@ -27,6 +27,7 @@ public class ItemWriterBlockAccessThreft implements ItemWriter<BlockedAddress> {
 	@Override
 	public void write(List<? extends BlockedAddress> items) throws Exception {
 		log.debug("Writer preparer to save information");
+		log.info("########Ips list Blocked ################");
 		for (BlockedAddress block : items ) {
 			log.debug("Call service responsible for save information");
 			
@@ -35,6 +36,7 @@ public class ItemWriterBlockAccessThreft implements ItemWriter<BlockedAddress> {
 			
 			//print the address block on console
 			log.info(block.getDescription());
+			
 			
 		}
 		
