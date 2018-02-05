@@ -7,33 +7,33 @@ Spring batch-based design for the processing and blocking of robot access
 
 2. The project have a dependence with mysql and is requered create database DbParser, folow the code execution:
 
-DROP DATABASE IF EXISTS DbParser;
-CREATE DATABASE IF NOT EXISTS DbParser;
-USE DbParser;
-DROP TABLE IF EXISTS TbAccessAddress;
-CREATE TABLE IF NOT EXISTS TbAccessAddress (
-  ipAddress varchar(50) NOT NULL,
-  dtAccess datetime NOT NULL,
-  methodHttp varchar(50) DEFAULT NULL,
-  returnCode int(11) DEFAULT NULL,
-  localAccess varchar(300) DEFAULT NULL,
-  KEY pkTbAccess (ipAddress,dtAccess)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-DELETE FROM TbAccessAddress;
+CREATE USER 'parser-app'@'localhost' IDENTIFIED BY 'parser-app';<br>
+GRANT ALL ON DbParser.* TO 'parser-app'@'localhost';<br>
 
-DROP TABLE IF EXISTS TbBlockedAddress;
-CREATE TABLE IF NOT EXISTS TbBlockedAddress (
-  dtBlocked datetime NOT NULL,
-  addressIp varchar(50) NOT NULL,
-  threshold int(11) NOT NULL,
-  description varchar(200) NOT NULL,
-  KEY pkTbBlockedAddress (dtBlocked,addressIp)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-DELETE FROM TbBlockedAddress;
+DROP DATABASE IF EXISTS DbParser;<br>
+CREATE DATABASE IF NOT EXISTS DbParser;<br>
+USE DbParser;<br>
+DROP TABLE IF EXISTS TbAccessAddress;<br>
 
-After databse created, create the new user, and create grant:
-CREATE USER 'parser-app'@'localhost' IDENTIFIED BY 'parser-app';
-GRANT ALL ON DbParser.* TO 'parser-app'@'localhost';
+CREATE TABLE IF NOT EXISTS TbAccessAddress ( <br>
+  ipAddress varchar(50) NOT NULL,<br>
+  dtAccess datetime NOT NULL,<br>
+  methodHttp varchar(50) DEFAULT NULL,<br>
+  returnCode int(11) DEFAULT NULL,<br>
+  localAccess varchar(300) DEFAULT NULL,<br>
+  KEY pkTbAccess (ipAddress,dtAccess)<br>
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;<br>
+DELETE FROM TbAccessAddress;<br>
+
+DROP TABLE IF EXISTS TbBlockedAddress;<br>
+CREATE TABLE IF NOT EXISTS TbBlockedAddress (<br>
+  dtBlocked datetime NOT NULL,<br>
+  addressIp varchar(50) NOT NULL,<br>
+  threshold int(11) NOT NULL,<br>
+  description varchar(200) NOT NULL,<br>
+  KEY pkTbBlockedAddress (dtBlocked,addressIp)<br>
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;<br>
+DELETE FROM TbBlockedAddress;<br>
 
 ### Installing
 
