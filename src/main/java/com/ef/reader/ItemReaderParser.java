@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.batch.core.annotation.AfterJob;
 import org.springframework.batch.core.annotation.AfterRead;
 import org.springframework.batch.core.annotation.BeforeRead;
@@ -16,12 +18,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.ef.format.AccessDetailLogFormat;
-import com.ef.model.AccessDetailLog;
-
 @Component("readerParser")
 @Scope(value = "step")
-public class ItemReaderParser implements ItemReader<AccessDetailLog> {
+public class ItemReaderParser implements ItemReader<String> {
+	//variable for log
+	private final static Logger log = LogManager.getLogger(
+			ItemReaderParser.class);
 	
 	@Value("#{jobParameters['accesslog']}")
 	private String accessLog;
@@ -41,22 +43,25 @@ public class ItemReaderParser implements ItemReader<AccessDetailLog> {
 	private void beforeRead() throws FileNotFoundException,
 							IOException {
 		if (buffer == null) {
+			log.debug("Preparer to read log file");
 			//load variable with the buffer of the file.
 			buffer = new BufferedReader(new FileReader(accessLog));
 			//load first line
 			line = buffer.readLine();
+			log.debug("Reader ready for reading log file");
 		}
+		
 	}
 
 	@Override
-	public AccessDetailLog read() throws Exception, 
+	public String read() throws Exception, 
 								UnexpectedInputException, 
 								ParseException, 
 								NonTransientResourceException {
-		
+		log.debug("checking the selected line");
 		if (this.line != null && !this.line.isEmpty()) {
 			//send information to item process
-			return AccessDetailLogFormat.parse(this.line);
+			return this.line;
 		}
 		return null;
 	}
@@ -66,7 +71,7 @@ public class ItemReaderParser implements ItemReader<AccessDetailLog> {
 	 */
 	@AfterRead
 	private void afterReader() throws IOException {
-		//get next line of the file.
+		log.debug("get next file line");
 		this.line = buffer.readLine();
 	}
 	/**
@@ -75,7 +80,7 @@ public class ItemReaderParser implements ItemReader<AccessDetailLog> {
 	 */
 	@AfterJob
 	private void afterJobReader() throws Exception {
-		//close the buffer
+		log.debug("Closing the buffer to allow access to the log file");
 		this.buffer.close();
 	}
 	

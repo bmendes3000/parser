@@ -84,4 +84,15 @@ public class AccessDetailLog {
 		this.localAccess = value;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "AccessDetailLog: [dtAccess=" + dtAccess + ", addressIp=" + addressIp + ", methodHttp=" + methodHttp
+				+ ", returnCode=" + returnCode + ", localAccess=" + localAccess + "]";
+	}
+	
+	
+	
 }
